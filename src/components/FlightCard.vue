@@ -12,7 +12,10 @@
           <p>Arrival Date: {{ flight.arrivalDateTime }}</p>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-          <p>Price: {{ flight.price }}</p>
+          <p>
+            Price:
+            {{ formatCurrency(flight.price) }}
+          </p>
           <p>Scales: {{ flight.scales }}</p>
         </div>
       </div>
@@ -27,6 +30,14 @@ export default {
     flight: {
       type: Object,
       required: true,
+    },
+  },
+  methods: {
+    formatCurrency(price, currency = "USD") {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: currency,
+      }).format(price);
     },
   },
 };

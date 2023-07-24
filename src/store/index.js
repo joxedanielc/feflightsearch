@@ -1,19 +1,38 @@
 import { defineStore } from "pinia";
+import axios from "axios";
 
-export default defineStore({
-  state: {
+export const useFlightStore = defineStore("flightStore", {
+  state: () => ({
     flights: [],
-  },
-  mutations: {
-    setFlights(state, flights) {
-      state.flights = flights;
+    params: {
+      departureCity: "",
+      arrivalCity: "",
+      departureDate: "",
+      arrivalDate: "",
     },
-  },
+  }),
   actions: {
-    searchFlights() {
-      axios.get("https://localhost:7191/api/Flight").then((response) => {
-        this.$store.commit("setFlights", response.data);
-      });
+    searchFlights({ departureCity, arrivalCity, departureDate, arrivalDate }) {
+      axios
+        .get("https://localhost:7191/api/Flight", {
+          params: {
+            departureCity,
+            arrivalCity,
+            departureDate,
+            arrivalDate,
+          },
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,PUT",
+          },
+        })
+        .then((response) => {
+          this.flights = response.data;
+          this.clearParams();
+        });
+    },
+    clearParams() {
+      this.params = {};
     },
   },
 });

@@ -71,7 +71,7 @@
     </div>
 
     <flight-card
-      v-for="flight in flights"
+      v-for="flight in flightsFromStore"
       :key="flight.id"
       :flight="flight"
     ></flight-card>
@@ -79,9 +79,8 @@
 </template>
 
 <script>
-//import { useStore } from "pinia";
+import { useFlightStore } from "../store";
 import { ElButton, ElSelect, ElOption, ElDatePicker } from "element-plus";
-import axios from "axios";
 import FlightCard from "./FlightCard.vue";
 
 export default {
@@ -116,18 +115,24 @@ export default {
       ],
     };
   },
+  computed: {
+    flightStore() {
+      return useFlightStore();
+    },
+    flightsFromStore() {
+      return this.flightStore.flights;
+    },
+  },
   methods: {
     searchFlights() {
-      axios
-        .get("https://localhost:7191/api/Flight", {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET,PUT",
-          },
-        })
-        .then((response) => {
-          this.flights = response.data;
-        });
+      this.flightStore.searchFlights({
+        departureCity: this.departureCity,
+        arrivalCity: this.arrivalCity,
+        departureDate: this.departureDate,
+        arrivalDate: this.arrivalDate,
+      });
+
+      console.log(this.flightStore);
     },
   },
 };

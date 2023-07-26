@@ -14,7 +14,7 @@ export const useFlightStore = defineStore("flightStore", {
   actions: {
     searchFlights({ departureCity, arrivalCity, departureDate, arrivalDate }) {
       axios
-        .get("https://localhost:7191/api/Flight", {
+        .get("https://localhost:5056/api/Flight", {
           params: {
             departureCity,
             arrivalCity,
